@@ -7,7 +7,7 @@ const helmet = require('helmet')
 const compression = require('compression')
 const bodyParser = require('body-parser')
 const routerNavigation = require('./routes')
-// const socket = require('socket.io')
+const socket = require('socket.io')
 
 const app = express()
 const port = process.env.DB_PORT
@@ -25,16 +25,16 @@ app.use(bodyParser.json())
 app.use('/api/v1', routerNavigation)
 app.use('/api', express.static('src/uploads'))
 
-// const db = {
-//   user: process.env.DB_USER,
-//   host: process.env.DB_HOST,
-//   password: process.env.DB_PASS,
-//   database: process.env.DB_DATABASE
-// }
-
-// app.post('/register', (req, res) => {
-//   db.query('INSERT * INTO user (username, userpassword)')
-// })
+const server = require('http').createServer(app)
+const io = socket(server, {
+  cors: {
+    origin: '*'
+  },
+  path: '/backend3/socket.io'
+})
+io.on('connection', (socket) => {
+  console.log('Socket.io connect !')
+})
 
 app.listen(port, () => {
   console.log(`Express app is listen on port ${port} !`)
