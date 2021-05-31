@@ -16,5 +16,12 @@ module.exports = {
         }
       })
     })
+  },
+  getDataConditions: (data) => {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT * FROM user WHERE ?', data, (error, result) => {
+        !error ? resolve(result) : reject(new Error(error))
+      })
+    })
   }
 }
