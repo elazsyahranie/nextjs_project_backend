@@ -14,7 +14,7 @@ const port = process.env.DB_PORT
 
 app.use(morgan('dev'))
 app.use(cors())
-app.options('*', cors())
+app.options('', cors())
 app.use(xss())
 app.use(helmet())
 app.use(compression())
@@ -34,8 +34,13 @@ const io = socket(server, {
 })
 io.on('connection', (socket) => {
   console.log('Socket.io connect !')
+  // Harus sama dengan di Frontend. 'globalMessage' ya 'globalMessage'
+  socket.on('globalMessage', (data) => {
+    console.log(data)
+  })
 })
 
-app.listen(port, () => {
+server.listen(port, () => {
+  // bagian sini ubah jadi server.listen
   console.log(`Express app is listen on port ${port} !`)
 })

@@ -7,13 +7,14 @@ const jwt = require('jsonwebtoken')
 module.exports = {
   register: async (req, res) => {
     try {
-      const { userFullName, userPassword } = req.body
+      const { userName, userEmail, userPassword } = req.body
       const salt = bcrypt.genSaltSync(10)
       const encryptPassword = bcrypt.hashSync(userPassword, salt)
       console.log(`before Encrypt = ${userPassword}`)
       console.log(`after Encrypt = ${encryptPassword}`)
       const setData = {
-        user_name: userFullName,
+        user_name: userName,
+        user_email: userEmail,
         user_password: encryptPassword
       }
       console.log(setData)
@@ -27,24 +28,24 @@ module.exports = {
   login: async (req, res) => {
     try {
       // console.log(req.body)
-      const { userFullName, userPassword } = req.body
-      const checkUserFullName = await authModel.getDataConditions({
-        user_name: userFullName
+      const { userEmail, userPassword } = req.body
+      const checkUserEmail = await authModel.getDataConditions({
+        user_email: userEmail
       })
 
-      if (checkUserFullName.length > 0) {
+      if (checkUserEmail.length > 0) {
         // if (checkUserFullName[0].is_verified === '0') {
         //    return helper.response(res, 403, 'Account is not verified')
         // }
 
         const checkPassword = bcrypt.compareSync(
           userPassword,
-          checkUserFullName[0].user_password
+          checkUserEmail[0].user_password
         )
 
         if (checkPassword) {
           console.log('User berhasil login')
-          const payload = checkUserFullName[0]
+          const payload = checkUserEmail[0]
           delete payload.user_password
           const token = jwt.sign({ ...payload }, process.env.PRIVATE_KEY, {
             expiresIn: '24h'
@@ -56,7 +57,7 @@ module.exports = {
           return helper.response(res, 400, 'Worng password')
         }
       } else {
-        return helper.response(res, 404, 'Email not Registed')
+        return helper.response(res, 404, 'Email not Registered')
       }
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
