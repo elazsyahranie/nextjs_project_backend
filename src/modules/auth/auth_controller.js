@@ -81,5 +81,29 @@ module.exports = {
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
     }
+  },
+  updateUser: async (req, res) => {
+    try {
+      const { id } = req.params
+      const { userName, emailName, phoneNumber } = req.body
+      const setData = {
+        user_name: userName,
+        user_email: emailName,
+        user_phone: phoneNumber
+      }
+      const result = await authModel.updateData(setData, id)
+      return helper.response(res, 200, 'Success Update User', result)
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  deleteUser: async (req, res) => {
+    try {
+      const { id } = req.params
+      const result = await authModel.deleteData(id)
+      return helper.response(res, 200, `Success Delete User ${id}`, result)
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
   }
 }
