@@ -16,14 +16,15 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
-  updateUser: async (req, res) => {
+  updateBalance: async (req, res) => {
     try {
       const { id } = req.params
-      const { userName, emailName, phoneNumber } = req.body
+      const { transactionSenderId, transactionReceiverId, transactionValue } =
+        req.body
       const setData = {
-        user_name: userName,
-        user_email: emailName,
-        user_phone: phoneNumber
+        transaction_sender_id: transactionSenderId,
+        transaction_receiver_id: transactionReceiverId,
+        transaction_value: transactionValue
       }
       const result = await balanceModel.updateData(setData, id)
       return helper.response(res, 200, 'Success Update User', result)
