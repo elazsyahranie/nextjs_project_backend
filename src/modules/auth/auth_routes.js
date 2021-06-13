@@ -4,6 +4,7 @@ const Route = express.Router()
 
 const {
   getAllUser,
+  getAllUsernameAscending,
   register,
   login,
   getUserById,
@@ -12,6 +13,7 @@ const {
 } = require('./auth_controller')
 
 Route.get('/', getAllUser)
+Route.get('/ascend', getAllUsernameAscending)
 Route.post('/register', register)
 Route.post('/login', login)
 Route.get('/:id', getUserById)

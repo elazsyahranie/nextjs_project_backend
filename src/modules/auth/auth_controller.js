@@ -7,8 +7,44 @@ const jwt = require('jsonwebtoken')
 module.exports = {
   getAllUser: async (req, res) => {
     try {
-      const result = await authModel.getDataAll()
-      return helper.response(res, 200, 'Success Get Data', result)
+      let { page, limit } = req.query
+      page = parseInt(page)
+      limit = parseInt(limit)
+      const totalData = await authModel.getDataCount()
+      console.log('Total Data: ' + totalData)
+      const totalPage = Math.ceil(totalData / limit)
+      console.log('Total Page: ' + totalPage)
+      const offset = page * limit - limit
+      const pageInfo = {
+        page,
+        totalPage,
+        limit,
+        totalData
+      }
+      const result = await authModel.getDataAll(limit, offset)
+      return helper.response(res, 200, 'Success Get Data', result, pageInfo)
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
+  getAllUsernameAscending: async (req, res) => {
+    try {
+      let { page, limit } = req.query
+      page = parseInt(page)
+      limit = parseInt(limit)
+      const totalData = await authModel.getDataCount()
+      console.log('Total Data: ' + totalData)
+      const totalPage = Math.ceil(totalData / limit)
+      console.log('Total Page: ' + totalPage)
+      const offset = page * limit - limit
+      const pageInfo = {
+        page,
+        totalPage,
+        limit,
+        totalData
+      }
+      const result = await authModel.getDataAllAscending(limit, offset)
+      return helper.response(res, 200, 'Success Get Data', result, pageInfo)
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
     }
