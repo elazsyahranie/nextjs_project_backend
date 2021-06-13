@@ -3,6 +3,7 @@ const Route = express.Router()
 // const authController = require('./auth_controller')
 
 const {
+  getAllUser,
   register,
   login,
   getUserById,
@@ -10,6 +11,7 @@ const {
   deleteUser
 } = require('./auth_controller')
 
+Route.get('/', getAllUser)
 Route.post('/register', register)
 Route.post('/login', login)
 Route.get('/:id', getUserById)

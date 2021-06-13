@@ -5,6 +5,14 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
 module.exports = {
+  getAllUser: async (req, res) => {
+    try {
+      const result = await authModel.getDataAll()
+      return helper.response(res, 200, 'Success Get Data', result)
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
   register: async (req, res) => {
     try {
       const { userName, userEmail, userPassword } = req.body

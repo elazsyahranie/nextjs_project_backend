@@ -1,6 +1,23 @@
 const connection = require('../../config/mysql')
 
 module.exports = {
+  getDataAll: () => {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT * FROM user', (error, result) => {
+        !error ? resolve(result) : reject(new Error(error))
+      })
+    })
+  },
+  getDataCount: () => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT COUNT(*) AS total FROM user',
+        (error, result) => {
+          !error ? resolve(result[0].total) : reject(new Error(error))
+        }
+      )
+    })
+  },
   register: (data) => {
     return new Promise((resolve, reject) => {
       connection.query('INSERT INTO user SET ?', data, (error, result) => {

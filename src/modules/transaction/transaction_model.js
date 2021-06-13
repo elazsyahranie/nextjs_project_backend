@@ -18,7 +18,7 @@ module.exports = {
         `${data.transaction_value} ${data.transaction_sender_id} ${data.transaction_receiver_id}`
       )
       connection.query(
-        `BEGIN; UPDATE balance SET balance = balance - ${data.transaction_value} WHERE user_id = ${data.transaction_sender_id}; UPDATE balance SET balance = balance + ${data.transaction_value} WHERE user_id = ${data.transaction_receiver_id}; INSERT INTO transaction SET = ?;`,
+        `UPDATE balance SET balance = balance - ${data.transaction_value} WHERE user_id = ${data.transaction_sender_id} UPDATE balance SET balance = balance + ${data.transaction_value} WHERE user_id = ${data.transaction_receiver_id};`,
         data,
         (error, result) => {
           console.log(error)
