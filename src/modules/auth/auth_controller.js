@@ -49,6 +49,15 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
+  getUsernameSearchKeyword: async (req, res) => {
+    try {
+      const { keyword } = req.params
+      const result = await authModel.getUserSearchKeyword(keyword)
+      return helper.response(res, 200, 'Success Find Username', result)
+    } catch (error) {
+      return helper.response(res, 400, 'Bad Request', error)
+    }
+  },
   register: async (req, res) => {
     try {
       const { userName, userEmail, userPassword } = req.body

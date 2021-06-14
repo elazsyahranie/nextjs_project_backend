@@ -5,6 +5,7 @@ const Route = express.Router()
 const {
   getAllUser,
   getAllUsernameAscending,
+  getUsernameSearchKeyword,
   register,
   login,
   getUserById,
@@ -13,6 +14,7 @@ const {
 } = require('./auth_controller')
 
 Route.get('/', getAllUser)
+Route.get('/:keyword', getUsernameSearchKeyword)
 Route.get('/ascend', getAllUsernameAscending)
 Route.post('/register', register)
 Route.post('/login', login)

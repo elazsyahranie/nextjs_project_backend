@@ -33,6 +33,17 @@ module.exports = {
       )
     })
   },
+  getUserSearchKeyword: (text) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        'SELECT * FROM `user` WHERE user_name LIKE ?',
+        text,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
   register: (data) => {
     return new Promise((resolve, reject) => {
       connection.query('INSERT INTO user SET ?', data, (error, result) => {
