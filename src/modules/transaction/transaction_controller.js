@@ -21,7 +21,7 @@ module.exports = {
       return helper.response(res, 400, 'Bad Request', error)
     }
   },
-  insertTransaction: async (req, res) => {
+  postTransaction: async (req, res) => {
     try {
       const { senderId, receiverId, transactionValue } = req.body
       const setData = {
@@ -30,8 +30,38 @@ module.exports = {
         transaction_value: transactionValue
       }
       console.log(setData)
-      const result = await transactionModel.insertTransaction(setData)
-      return helper.response(res, 200, 'Transaction Succesful', result)
+      const resultPostTransaction = await transactionModel.insertTransaction(
+        setData
+      )
+      const resultSender = await transactionModel.getBalanceSender(senderId)
+      console.log(resultSender)
+      console.log(resultSender[0].user_id)
+      const { balance } = resultSender[0]
+      const userSenderId = resultSender[0].user_id
+      const increaseBalance = Number(balance) - Number(transactionValue)
+      await transactionModel.updateDataSender(userSenderId, increaseBalance)
+      const resultReceiver = await transactionModel.getBalanceReceiver(
+        receiverId
+      )
+      console.log(resultReceiver[0])
+      const userReceiverId = resultReceiver[0].user_id
+      const userReceiverBalance = resultReceiver[0].balance
+      const decreaseBalance = userReceiverBalance + Number(transactionValue)
+      console.log(userReceiverId)
+      console.log(decreaseBalance)
+      await transactionModel.updateDataReceiver(userReceiverId, decreaseBalance)
+      // const balanceSender = Buat model Get Data Balance By Sender Id
+      // const updateDataBalanceSender = {
+      // Ambil data dari balance
+      // } Bikin model untuk update data balance berdasakan sender id
+      // Nah disini controller untuk receiver, tambah data berarti. Sama kayak di atas
+      return helper.response(
+        res,
+        200,
+        'Transaction Succesful',
+        resultPostTransaction,
+        resultSender
+      )
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
     }

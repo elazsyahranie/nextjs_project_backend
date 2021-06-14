@@ -4,9 +4,9 @@ const Route = express.Router()
 
 const {
   getTransactionById,
-  insertTransaction
+  postTransaction
 } = require('./transaction_controller')
 
 Route.get('/:id', getTransactionById)
-Route.post('/insertransaction', insertTransaction)
+Route.post('/insertransaction', postTransaction)
 module.exports = Route

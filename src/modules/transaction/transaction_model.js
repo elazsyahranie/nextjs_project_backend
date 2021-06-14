@@ -14,11 +14,8 @@ module.exports = {
   },
   insertTransaction: (data) => {
     return new Promise((resolve, reject) => {
-      console.log(
-        `${data.transaction_value} ${data.transaction_sender_id} ${data.transaction_receiver_id}`
-      )
       connection.query(
-        `UPDATE balance SET balance = balance - ${data.transaction_value} WHERE user_id = ${data.transaction_sender_id} UPDATE balance SET balance = balance + ${data.transaction_value} WHERE user_id = ${data.transaction_receiver_id};`,
+        'INSERT INTO transaction SET ?',
         data,
         (error, result) => {
           console.log(error)
@@ -26,6 +23,66 @@ module.exports = {
             const newResult = {
               id: result.insertId,
               ...data
+            }
+            resolve(newResult)
+          } else {
+            reject(new Error(error))
+          }
+        }
+      )
+    })
+  },
+  getBalanceSender: (senderId) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM balance WHERE user_id = ${senderId}`,
+        (error, result) => {
+          console.log(error)
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
+  updateDataSender: (userSenderId, increaseBalance) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `UPDATE balance SET balance = ${increaseBalance} WHERE user_id = ${userSenderId}`,
+        (error, result) => {
+          console.log(error)
+          if (!error) {
+            const newResult = {
+              userId: userSenderId,
+              ...increaseBalance
+            }
+            resolve(newResult)
+          } else {
+            reject(new Error(error))
+          }
+        }
+      )
+    })
+  },
+  getBalanceReceiver: (receiverId) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM balance WHERE user_id = ${receiverId}`,
+        (error, result) => {
+          console.log(error)
+          !error ? resolve(result) : reject(new Error(error))
+        }
+      )
+    })
+  },
+  updateDataReceiver: (userReceiverId, decreaseBalance) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `UPDATE balance SET balance = ${decreaseBalance} WHERE user_id = ${userReceiverId}`,
+        (error, result) => {
+          console.log(error)
+          if (!error) {
+            const newResult = {
+              userId: userReceiverId,
+              ...decreaseBalance
             }
             resolve(newResult)
           } else {
