@@ -95,7 +95,7 @@ module.exports = {
         from: "'Z-DOMPET'", // sender address
         to: 'elazaribrahims@gmail.com', // list of receivers
         subject: 'Z-DOMPET - Activation Email', // Subject line
-        html: `<h6>Hi there!</h6><a href='http://localhost:3001/api/v1/activation/${result.id}'>Click</>` // html body
+        html: `<h6>Hi there!</h6><a href='http://localhost:3003/api/v1/activation/?id=${result.id}'>Click</>` // html body
       }
 
       await transporter.sendMail(mailOptions, function (error, info) {

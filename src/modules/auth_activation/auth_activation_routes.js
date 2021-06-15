@@ -4,5 +4,5 @@ const Route = express.Router()
 
 const { activateAccount } = require('./auth_activation_controller')
 
-Route.patch('/:id', activateAccount)
+Route.patch('/', activateAccount)
 module.exports = Route

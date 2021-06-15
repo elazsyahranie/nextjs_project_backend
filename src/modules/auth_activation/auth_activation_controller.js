@@ -8,7 +8,7 @@ require('dotenv').config()
 module.exports = {
   activateAccount: async (req, res) => {
     try {
-      const { id } = req.params
+      const { id } = req.query
       const result = await authModel.activateData(id)
       return helper.response(res, 200, 'Success Activate User', result)
     } catch (error) {
