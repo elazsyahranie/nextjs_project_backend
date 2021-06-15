@@ -51,7 +51,7 @@ module.exports = {
   },
   getUsernameSearchKeyword: async (req, res) => {
     try {
-      const { keyword } = req.body
+      const { keyword } = req.query
       const result = await authModel.getUserSearchKeyword(keyword)
       return helper.response(
         res,
