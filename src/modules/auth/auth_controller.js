@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const authModel = require('./auth_model')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const nodemailer = require('nodemailer')
 
 module.exports = {
   getAllUser: async (req, res) => {
@@ -77,7 +78,34 @@ module.exports = {
       }
       console.log(setData)
       const result = await authModel.register(setData)
+      console.log('This is it, ' + result)
       delete result.user_password
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+          user: process.env.SMTP_EMAIL, // generated ethereal user
+          pass: process.env.SMTP_PASSWORD // generated ethereal password
+        }
+      })
+
+      const mailOptions = {
+        from: "'Z-DOMPET'", // sender address
+        to: 'elazaribrahims@gmail.com', // list of receivers
+        subject: 'Z-DOMPET - Activation Email', // Subject line
+        html: `<h6>Hi there!</h6><a href='http://localhost:3001/api/v1/activation/${authModel.user_id}'>Click</>` // html body
+      }
+
+      await transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error)
+          return helper.response(res, 400, 'Email Not Send !')
+        } else {
+          console.log('Email sent: ' + info.response)
+          return helper.response(res, 200, 'Activation Email Sent')
+        }
+      })
       return helper.response(res, 200, 'Success Register User', result)
     } catch (error) {
       return helper.response(res, 400, 'Bad Request', error)
