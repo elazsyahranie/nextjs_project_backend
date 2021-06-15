@@ -78,7 +78,8 @@ module.exports = {
       }
       console.log(setData)
       const result = await authModel.register(setData)
-      console.log('This is it, ' + result)
+      console.log(result)
+      console.log(result.id)
       delete result.user_password
       const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
@@ -94,7 +95,7 @@ module.exports = {
         from: "'Z-DOMPET'", // sender address
         to: 'elazaribrahims@gmail.com', // list of receivers
         subject: 'Z-DOMPET - Activation Email', // Subject line
-        html: `<h6>Hi there!</h6><a href='http://localhost:3001/api/v1/activation/${authModel.user_id}'>Click</>` // html body
+        html: `<h6>Hi there!</h6><a href='http://localhost:3001/api/v1/activation/${result.id}'>Click</>` // html body
       }
 
       await transporter.sendMail(mailOptions, function (error, info) {
